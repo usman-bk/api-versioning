@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - run: go build ./...
+      - run: go vet ./...
+      - name: Formatting
+        run: |
+          u=$(gofmt -l .)
+          if [ -n "$u" ]; then echo "gofmt would change:"; echo "$u"; exit 1; fi
+
+      - run: go test -race ./...
+
+      # The golden files are the contract, so a run that quietly rewrites
+      # them is a run that proves nothing. This fails if the committed files
+      # and the generated ones disagree.
+      - name: Golden files are current
+        run: |
+          UPDATE_GOLDEN=1 go test ./internal/handler/ -run TestEachVersion
+          if ! git diff --quiet -- internal/handler/testdata; then
+            echo "the golden files are out of date, and these versions changed shape:"
+            git --no-pager diff -- internal/handler/testdata
+            exit 1
+          fi

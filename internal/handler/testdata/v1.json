@@ -1,0 +1,19 @@
+{
+  "grade": "excellent",
+  "id": "lst_1",
+  "images": [
+    "https://img.example.com/a/720.avif",
+    "https://img.example.com/b/720.avif"
+  ],
+  "in_stock": true,
+  "original_price": 62900,
+  "price": 48900,
+  "seller": {
+    "id": "sel_9",
+    "name": "Renewed Electronics GmbH",
+    "rating": 4.7
+  },
+  "stock_count": 2,
+  "title": "iPhone 13 Pro 256 GB Graphite",
+  "warranty_months": 12
+}
